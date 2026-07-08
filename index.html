@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JD CAR SPA | Premium Detailing Studio</title>
-    <!-- FontAwesome Icons Link -->
+    <!-- FontAwesome Icons & Supabase CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         /* Basic Reset & Premium Dark Theme */
         * {
@@ -19,306 +20,84 @@
             color: #ffffff;
             line-height: 1.6;
         }
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
+        a { text-decoration: none; color: inherit; }
 
         /* Header & Navigation */
         header {
-            background-color: #1a1a1a;
-            padding: 20px 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            border-bottom: 2px solid #e50914;
+            background-color: #1a1a1a; padding: 20px 5%; display: flex;
+            justify-content: space-between; align-items: center;
+            position: fixed; width: 100%; top: 0; z-index: 1000; border-bottom: 2px solid #e50914;
         }
-        .logo {
-            font-size: 26px;
-            font-weight: 800;
-            color: #ffffff;
-            letter-spacing: 1px;
-        }
-        .logo span {
-            color: #e50914;
-        }
-        nav a {
-            margin-left: 20px;
-            font-weight: 500;
-            text-transform: uppercase;
-            font-size: 14px;
-            letter-spacing: 1px;
-            transition: color 0.3s;
-        }
-        nav a:hover {
-            color: #e50914;
-        }
+        .logo { font-size: 26px; font-weight: 800; letter-spacing: 1px; }
+        .logo span { color: #e50914; }
+        nav a { margin-left: 20px; font-weight: 500; text-transform: uppercase; font-size: 14px; letter-spacing: 1px; transition: color 0.3s; }
+        nav a:hover { color: #e50914; }
 
         /* Hero Section */
         .hero {
-            height: 100vh;
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1607860108855-64acf2078ed9?auto=format&fit=crop&w=1920&q=80') no-repeat center center/cover;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 0 20px;
-            padding-top: 80px;
+            height: 100vh; background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1607860108855-64acf2078ed9?auto=format&fit=crop&w=1920&q=80') no-repeat center center/cover;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 20px; padding-top: 80px;
         }
-        .hero h1 {
-            font-size: 52px;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: 800;
-        }
-        .hero p {
-            font-size: 20px;
-            color: #ccc;
-            margin-bottom: 35px;
-            max-width: 700px;
-        }
+        .hero h1 { font-size: 52px; margin-bottom: 15px; text-transform: uppercase; font-weight: 800; }
+        .hero p { font-size: 20px; color: #ccc; margin-bottom: 35px; max-width: 700px; }
         .btn {
-            background-color: #e50914;
-            color: white;
-            padding: 14px 35px;
-            font-size: 16px;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border-radius: 5px;
-            transition: background 0.3s, transform 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            border: none;
+            background-color: #e50914; color: white; padding: 14px 35px; font-size: 16px; font-weight: bold;
+            text-transform: uppercase; border-radius: 5px; transition: background 0.3s, transform 0.2s;
+            display: inline-flex; align-items: center; gap: 10px; cursor: pointer; border: none;
         }
-        .btn:hover {
-            background-color: #b20710;
-            transform: scale(1.05);
-        }
+        .btn:hover { background-color: #b20710; transform: scale(1.05); }
 
         /* Section Common Styles */
-        section {
-            padding: 90px 5%;
-            text-align: center;
-        }
-        section h2 {
-            font-size: 36px;
-            margin-bottom: 50px;
-            position: relative;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-        }
-        section h2::after {
-            content: '';
-            display: block;
-            width: 60px;
-            height: 4px;
-            background-color: #e50914;
-            margin: 12px auto 0;
-        }
+        section { padding: 90px 5%; text-align: center; }
+        section h2 { font-size: 36px; margin-bottom: 50px; text-transform: uppercase; position: relative; }
+        section h2::after { content: ''; display: block; width: 60px; height: 4px; background-color: #e50914; margin: 12px auto 0; }
 
         /* Services Grid */
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-            margin-top: 20px;
-        }
-        .service-card {
-            background-color: #1a1a1a;
-            padding: 45px 25px;
-            border-radius: 8px;
-            border: 1px solid #2a2a2a;
-            transition: transform 0.3s, border-color 0.3s;
-        }
-        .service-card:hover {
-            transform: translateY(-10px);
-            border-color: #e50914;
-        }
-        .service-card i {
-            font-size: 42px;
-            color: #e50914;
-            margin-bottom: 22px;
-        }
-        .service-card h3 {
-            font-size: 22px;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-        }
-        .service-card p {
-            color: #aaa;
-            font-size: 15px;
-        }
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin-top: 20px; }
+        .service-card { background-color: #1a1a1a; padding: 45px 25px; border-radius: 8px; border: 1px solid #2a2a2a; transition: transform 0.3s; }
+        .service-card:hover { transform: translateY(-10px); border-color: #e50914; }
+        .service-card i { font-size: 42px; color: #e50914; margin-bottom: 22px; }
+        .service-card h3 { font-size: 22px; margin-bottom: 15px; text-transform: uppercase; }
+        .service-card p { color: #aaa; font-size: 15px; }
 
-        /* Booking Section */
-        .booking-container {
-            max-width: 700px;
-            margin: 0 auto;
-            background-color: #1a1a1a;
-            padding: 40px;
-            border-radius: 8px;
-            border: 1px solid #2a2a2a;
-            text-align: left;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: #ccc;
-        }
-        .form-control {
-            width: 100%;
-            padding: 12px;
-            background-color: #2a2a2a;
-            border: 1px solid #3a3a3a;
-            color: white;
-            border-radius: 4px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-        }
-        .form-control:focus {
-            outline: none;
-            border-color: #e50914;
-        }
+        /* Booking Form Styles */
+        .booking-container, .admin-container { max-width: 700px; margin: 0 auto; background-color: #1a1a1a; padding: 40px; border-radius: 8px; border: 1px solid #2a2a2a; text-align: left; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px; text-transform: uppercase; color: #ccc; }
+        .form-control { width: 100%; padding: 12px; background-color: #2a2a2a; border: 1px solid #3a3a3a; color: white; border-radius: 4px; font-size: 16px; }
+        .form-control:focus { outline: none; border-color: #e50914; }
         
-        /* Time Slots Grid */
-        .slots-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            gap: 12px;
-            margin-top: 10px;
-        }
-        .slot-option {
-            background-color: #2a2a2a;
-            border: 1px solid #3a3a3a;
-            padding: 12px;
-            text-align: center;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 14px;
-            transition: all 0.3s;
-        }
-        .slot-option:hover {
-            border-color: #e50914;
-            background-color: #222;
-        }
-        .slot-option.selected {
-            background-color: #e50914;
-            border-color: #e50914;
-            color: white;
-        }
-        .slot-option.booked {
-            background-color: #111;
-            border-color: #222;
-            color: #555;
-            cursor: not-allowed;
-            text-decoration: line-through;
-        }
+        .slots-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin-top: 10px; }
+        .slot-option { background-color: #2a2a2a; border: 1px solid #3a3a3a; padding: 12px; text-align: center; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 14px; }
+        .slot-option.selected { background-color: #e50914; border-color: #e50914; color: white; }
 
-        /* Success Message Alert */
-        .success-box {
-            display: none;
-            background-color: #1b5e20;
-            color: white;
-            padding: 20px;
-            border-radius: 6px;
-            margin-top: 20px;
-            text-align: center;
-            font-weight: bold;
-            border: 1px solid #4caf50;
-        }
+        .success-box { display: none; background-color: #1b5e20; color: white; padding: 20px; border-radius: 6px; text-align: center; font-weight: bold; border: 1px solid #4caf50; }
+
+        /* Admin Dashboard Table */
+        .admin-section { display: none; background-color: #111; padding: 60px 5%; }
+        .booking-table { width: 100%; border-collapse: collapse; margin-top: 20px; background-color: #1a1a1a; color: white; }
+        .booking-table th, .booking-table td { padding: 12px; text-align: left; border-bottom: 1px solid #3a3a3a; }
+        .booking-table th { background-color: #e50914; text-transform: uppercase; font-size: 14px; }
+        .booking-table tr:hover { background-color: #222; }
 
         /* Gallery Section */
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-        }
-        .gallery-item {
-            position: relative;
-            overflow: hidden;
-            border-radius: 8px;
-            height: 260px;
-        }
-        .gallery-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s;
-        }
-        .gallery-item:hover img {
-            transform: scale(1.1);
-        }
-        .gallery-label {
-            position: absolute;
-            bottom: 15px;
-            left: 15px;
-            background: rgba(229, 9, 20, 0.9);
-            padding: 6px 18px;
-            font-weight: bold;
-            font-size: 13px;
-            text-transform: uppercase;
-            border-radius: 4px;
-        }
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
+        .gallery-item { position: relative; overflow: hidden; border-radius: 8px; height: 260px; }
+        .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
+        .gallery-item:hover img { transform: scale(1.1); }
+        .gallery-label { position: absolute; bottom: 15px; left: 15px; background: rgba(229, 9, 20, 0.9); padding: 6px 18px; font-weight: bold; font-size: 13px; text-transform: uppercase; border-radius: 4px; }
 
-        /* Contact Section */
-        .contact-info {
-            max-width: 650px;
-            margin: 0 auto;
-            background-color: #1a1a1a;
-            padding: 45px;
-            border-radius: 8px;
-            border: 1px solid #2a2a2a;
-        }
-        .info-item {
-            margin-bottom: 25px;
-            font-size: 17px;
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            gap: 20px;
-            text-align: left;
-            padding-left: 10%;
-        }
-        .info-item i {
-            color: #e50914;
-            font-size: 22px;
-            width: 30px;
-            text-align: center;
-        }
-
-        /* Footer */
-        footer {
-            background-color: #0b0b0b;
-            padding: 25px;
-            text-align: center;
-            color: #666;
-            font-size: 14px;
-            border-top: 1px solid #1a1a1a;
-        }
+        /* Contact & Footer */
+        .contact-info { max-width: 650px; margin: 0 auto; background-color: #1a1a1a; padding: 45px; border-radius: 8px; border: 1px solid #2a2a2a; }
+        .info-item { margin-bottom: 25px; font-size: 17px; display: flex; align-items: center; gap: 20px; padding-left: 10%; }
+        .info-item i { color: #e50914; font-size: 22px; width: 30px; text-align: center; }
+        footer { background-color: #0b0b0b; padding: 25px; text-align: center; color: #666; font-size: 14px; border-top: 1px solid #1a1a1a; }
 
         @media (max-width: 768px) {
-            header { padding: 15px 5%; }
-            nav { display: none; }
-            .hero h1 { font-size: 34px; }
-            .hero p { font-size: 16px; }
-            section h2 { font-size: 28px; }
+            header { padding: 15px 5%; } nav { display: none; }
+            .hero h1 { font-size: 34px; } .hero p { font-size: 16px; }
             .info-item { padding-left: 0; justify-content: center; }
+            .booking-table { font-size: 12px; display: block; overflow-x: auto; }
         }
     </style>
 </head>
@@ -333,16 +112,15 @@
             <a href="#booking">Book Slot</a>
             <a href="#gallery">Our Work</a>
             <a href="#contact">Contact</a>
+            <a href="#admin-login-anchor" onclick="showAdminLogin()">Admin Panel</a>
         </nav>
     </header>
 
     <!-- Hero Section -->
     <section id="home" class="hero">
         <h1>Give Your Car A Showroom Shine</h1>
-        <p>JD CAR SPA — Professional detailing, ultra-gloss ceramic coatings, and deep cleaning services now in Dharampur.</p>
-        <a href="#booking" class="btn">
-            <i class="fa-solid fa-calendar-check"></i> Book Online Slot Now
-        </a>
+        <p>JD CAR SPA — Professional detailing, ultra-gloss coatings, and deep cleaning now in Dharampur.</p>
+        <a href="#booking" class="btn"><i class="fa-solid fa-calendar-check"></i> Book Online Slot Now</a>
     </section>
 
     <!-- Services Section -->
@@ -352,17 +130,17 @@
             <div class="service-card">
                 <i class="fa-solid fa-wand-magic-sparkles"></i>
                 <h3>Ceramic Coating</h3>
-                <p>Premium 9H ultra-gloss paint protection shield against scratches, UV rays, and environmental damage.</p>
+                <p>Premium 9H ultra-gloss paint protection shield against scratches and UV rays.</p>
             </div>
             <div class="service-card">
                 <i class="fa-solid fa-car-clean"></i>
                 <h3>Interior Detailing</h3>
-                <p>Complete deep vacuuming, steam sanitization, and conditioning for seats, roof, and dashboard.</p>
+                <p>Complete deep vacuuming, steam sanitization, and conditioning for interior.</p>
             </div>
             <div class="service-card">
                 <i class="fa-solid fa-shield-halved"></i>
                 <h3>Paint Protection Film (PPF)</h3>
-                <p>High-grade self-healing clear film installation to preserve your vehicle's factory paint long-term.</p>
+                <p>High-grade self-healing clear film installation to preserve your vehicle's factory paint.</p>
             </div>
         </div>
     </section>
@@ -372,70 +150,71 @@
         <h2>Book Your Appointment</h2>
         <div class="booking-container">
             <form id="spaBookingForm" onsubmit="handleFormSubmit(event)">
-                <div class="form-group">
-                    <label>Full Name</label>
-                    <input type="text" class="form-control" required placeholder="Enter your full name">
-                </div>
-                <div class="form-group">
-                    <label>Phone Number</label>
-                    <input type="tel" class="form-control" required placeholder="Enter your mobile number">
-                </div>
+                <div class="form-group"><label>Full Name</label><input type="text" id="custName" class="form-control" required placeholder="Enter your name"></div>
+                <div class="form-group"><label>Phone Number</label><input type="tel" id="custPhone" class="form-control" required placeholder="Enter mobile number"></div>
+                <div class="form-group"><label>Car Brand & Model</label><input type="text" id="carModel" class="form-control" required placeholder="e.g. Swift, Fortuner, i20"></div>
                 <div class="form-group">
                     <label>Select Service</label>
-                    <select class="form-control" required>
+                    <select id="selectedService" class="form-control" required>
                         <option value="">-- Choose a Service --</option>
-                        <option value="ceramic">Ceramic Coating</option>
-                        <option value="interior">Deep Interior Detailing</option>
-                        <option value="ppf">Paint Protection Film (PPF)</option>
-                        <option value="full-wash">Full Body Spa & Wash</option>
+                        <option value="Ceramic Coating">Ceramic Coating</option>
+                        <option value="Deep Interior Detailing">Deep Interior Detailing</option>
+                        <option value="Paint Protection Film (PPF)">Paint Protection Film (PPF)</option>
+                        <option value="Full Body Spa & Wash">Full Body Spa & Wash</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label>Select Date</label>
-                    <input type="date" id="bookingDate" class="form-control" required>
-                </div>
+                <div class="form-group"><label>Select Date</label><input type="date" id="bookingDate" class="form-control" required></div>
                 <div class="form-group">
                     <label>Select Available Time Slot</label>
-                    <div class="slots-grid" id="slotsContainer">
+                    <div class="slots-grid">
                         <div class="slot-option" onclick="selectSlot(this)">09:00 AM</div>
                         <div class="slot-option" onclick="selectSlot(this)">11:00 AM</div>
                         <div class="slot-option" onclick="selectSlot(this)">01:00 PM</div>
-                        <div class="slot-option booked">03:00 PM (Full)</div>
-                        <div class="slot-option" onclick="selectSlot(this)">04:00 PM</div>
-                        <div class="slot-option" onclick="selectSlot(this)">05:30 PM</div>
+                        <div class="slot-option" onclick="selectSlot(this)">03:00 PM</div>
+                        <div class="slot-option" onclick="selectSlot(this)">04:30 PM</div>
                     </div>
                 </div>
-                
                 <input type="hidden" id="selectedSlotValue" required>
-                
-                <button type="submit" class="btn" style="width: 100%; justify-content: center; margin-top: 10px;">
-                    Confirm My Booking
-                </button>
+                <button type="submit" class="btn" style="width: 100%; justify-content: center; margin-top: 15px;">Confirm My Booking</button>
             </form>
-
-            <div class="success-box" id="successMessage">
-                <i class="fa-solid fa-circle-check"></i><br><br>
-                <span id="successText">Booking Successful! Your slot has been reserved.</span>
-            </div>
+            <div class="success-box" id="successMessage"><i class="fa-solid fa-circle-check"></i><br><br>Booking Successful! Your slot has been reserved in our system.</div>
         </div>
+    </section>
+
+    <!-- SIKRET OWNER ADMIN PANEL LOGIN -->
+    <span id="admin-login-anchor"></span>
+    <section id="admin-login-section" style="display:none; background-color: #161616; border-top: 1px solid #222;">
+        <h2>Owner Admin Login</h2>
+        <div class="admin-container">
+            <div class="form-group"><label>Admin ID</label><input type="text" id="adminId" class="form-control" placeholder="Enter admin ID"></div>
+            <div class="form-group"><label>Password</label><input type="password" id="adminPass" class="form-control" placeholder="Enter password"></div>
+            <button onclick="checkAdminLogin()" class="btn" style="width:100%; justify-content:center;">Login to Dashboard</button>
+        </div>
+    </section>
+
+    <!-- LIVE DASHBOARD TABLE -->
+    <section id="adminDashboard" class="admin-section">
+        <h2>Live Booking Dashboard</h2>
+        <button onclick="loadBookings()" class="btn" style="margin-bottom:20px;"><i class="fa-solid fa-rotate"></i> Refresh Data</button>
+        <table class="booking-table">
+            <thead>
+                <tr>
+                    <th>Date</th><th>Time Slot</th><th>Customer Name</th><th>Phone</th><th>Car Model</th><th>Service Required</th>
+                </tr>
+            </thead>
+            <tbody id="bookingsTableBody">
+                <tr><td colspan="6" style="text-align:center;">Loading live appointments...</td></tr>
+            </tbody>
+        </table>
     </section>
 
     <!-- Gallery Section -->
     <section id="gallery">
         <h2>Our Best Work</h2>
         <div class="gallery-grid">
-            <div class="gallery-item">
-                <img src="https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=600&q=80" alt="Interior Cleaning">
-                <div class="gallery-label">Deep Interior Clean</div>
-            </div>
-            <div class="gallery-item">
-                <img src="https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=600&q=80" alt="Ceramic Coating">
-                <div class="gallery-label">Ceramic Gloss Finish</div>
-            </div>
-            <div class="gallery-item">
-                <img src="https://images.unsplash.com/photo-1520340356584-f9917d1eea6f?auto=format&fit=crop&w=600&q=80" alt="Exterior Polish">
-                <div class="gallery-label">Paint Correction</div>
-            </div>
+            <div class="gallery-item"><img src="https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=600&q=80" alt="Clean"><div class="gallery-label">Deep Interior Clean</div></div>
+            <div class="gallery-item"><img src="https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=600&q=80" alt="Gloss"><div class="gallery-label">Ceramic Gloss Finish</div></div>
+            <div class="gallery-item"><img src="https://images.unsplash.com/photo-1520340356584-f9917d1eea6f?auto=format&fit=crop&w=600&q=80" alt="Paint"><div class="gallery-label">Paint Correction</div></div>
         </div>
     </section>
 
@@ -443,68 +222,101 @@
     <section id="contact" style="background-color: #1a1a1a;">
         <h2>Contact Us</h2>
         <div class="contact-info">
-            <div class="info-item">
-                <i class="fa-solid fa-location-dot"></i>
-                <span>Near Sarvottam Fastfood, Dharampur, Gujarat - 396050</span>
-            </div>
-            <div class="info-item">
-                <i class="fa-solid fa-phone"></i>
-                <span>+91 95747 23722</span>
-            </div>
-            <div class="info-item">
-                <i class="fa-solid fa-envelope"></i>
-                <span>jdcarspa27@gmail.com</span>
-            </div>
-            <div class="info-item">
-                <i class="fa-solid fa-clock"></i>
-                <span>09:00 AM - 06:00 PM (Monday to Saturday)</span>
-            </div>
+            <div class="info-item"><i class="fa-solid fa-location-dot"></i><span>Near Sarvottam Fastfood, Dharampur, Gujarat - 396050</span></div>
+            <div class="info-item"><i class="fa-solid fa-phone"></i><span>+91 95747 23722</span></div>
+            <div class="info-item"><i class="fa-solid fa-envelope"></i><span>jdcarspa27@gmail.com</span></div>
+            <div class="info-item"><i class="fa-solid fa-clock"></i><span>09:00 AM - 06:00 PM (Mon to Sat)</span></div>
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2026 JD CAR SPA. All Rights Reserved. Built with ❤️</p>
-    </footer>
+    <footer><p>&copy; 2026 JD CAR SPA. All Rights Reserved. Built with ❤️</p></footer>
 
-    <!-- Booking Interactive JavaScript -->
     <script>
-        // Set minimum date to today
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById('bookingDate').setAttribute('min', today);
+        // ⚠️ અહીં તમારા SUPABASE ની DETAILS લાઈન નંબર ૨૦૪ અને ૨૦૫ માં સેટ કરો:
+        const SUPABASE_URL = "તમારી_SUPABASE_URL_અહીં_નાખો";
+        const SUPABASE_KEY = "તમારી_SUPABASE_ANON_KEY_અહીં_નાખો";
 
-        // Slot selection function
+        const supabase =  window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // Form Date Setup
+        document.getElementById('bookingDate').setAttribute('min', new Date().toISOString().split('T')[0]);
+
         function selectSlot(element) {
-            if (element.classList.contains('booked')) return;
-            
-            const slots = document.querySelectorAll('.slot-option');
-            slots.forEach(slot => slot.classList.remove('selected'));
-            
+            document.querySelectorAll('.slot-option').forEach(slot => slot.classList.remove('selected'));
             element.classList.add('selected');
             document.getElementById('selectedSlotValue').value = element.innerText;
         }
 
-        // Form Submit Handler
-        function handleFormSubmit(event) {
+        // કસ્ટમર ડેટા સબમિટ થઈને સીધો SUPABASE માં જશે
+        async function handleFormSubmit(event) {
             event.preventDefault();
-            
-            const selectedSlot = document.getElementById('selectedSlotValue').value;
-            const chosenDate = document.getElementById('bookingDate').value;
-            
-            if (!selectedSlot) {
-                alert("Please select an available time slot before confirming!");
-                return;
-            }
+            const name = document.getElementById('custName').value;
+            const phone = document.getElementById('custPhone').value;
+            const car = document.getElementById('carModel').value;
+            const service = document.getElementById('selectedService').value;
+            const date = document.getElementById('bookingDate').value;
+            const slot = document.getElementById('selectedSlotValue').value;
 
-            document.getElementById('spaBookingForm').style.display = 'none';
-            
-            const successBox = document.getElementById('successMessage');
-            const successText = document.getElementById('successText');
-            
-            successText.innerHTML = `Booking Confirmed!<br><br>We have reserved your slot for <strong>${chosenDate}</strong> at <strong>${selectedSlot}</strong>. See you at JD CAR SPA!`;
-            successBox.style.display = 'block';
+            if (!slot) { alert("Please select a time slot!"); return; }
+
+            // Supabase Database Insert
+            const { data, error } = await supabase.from('bookings').insert([{ name, phone, car, service, date, slot }]);
+
+            if (error) {
+                alert("Something went wrong! Please try again.");
+                console.error(error);
+            } else {
+                document.getElementById('spaBookingForm').style.display = 'none';
+                document.getElementById('successMessage').style.display = 'block';
+            }
+        }
+
+        // એડમિન લોગિન સિસ્ટમ
+        function showAdminLogin() {
+            document.getElementById('admin-login-section').style.display = 'block';
+            window.location.hash = "admin-login-section";
+        }
+
+        function checkAdminLogin() {
+            const id = document.getElementById('adminId').value;
+            const pass = document.getElementById('adminPass').value;
+
+            if(id === "admin" && pass === "jdcarspa2026") {
+                document.getElementById('admin-login-section').style.display = 'none';
+                document.getElementById('adminDashboard').style.display = 'block';
+                loadBookings();
+            } else {
+                alert("Wrong ID or Password! Access Denied.");
+            }
+        }
+
+        // ડેટાબેઝમાંથી લાઈવ ડેટા ખેંચીને ટેબલમાં લાવવા માટે
+        async function loadBookings() {
+            const tbody = document.getElementById('bookingsTableBody');
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">Fetching records...</td></tr>`;
+
+            const { data, error } = await supabase.from('bookings').select('*').order('date', { ascending: true });
+
+            if (error) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:red;">Error loading data!</td></tr>`;
+            } else if (data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">No appointments booked yet.</td></tr>`;
+            } else {
+                tbody.innerHTML = "";
+                data.forEach(b => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td><strong>${b.date}</strong></td>
+                            <td><span style="background:#e50914; padding:3px 8px; border-radius:3px; font-size:13px;">${b.slot}</span></td>
+                            <td>${b.name}</td>
+                            <td><a href="tel:${b.phone}" style="color:#4caf50;"><i class="fa-solid fa-phone"></i> ${b.phone}</a></td>
+                            <td>🚗 ${b.car}</td>
+                            <td><em>${b.service}</em></td>
+                        </tr>
+                    `;
+                });
+            }
         }
     </script>
-
 </body>
 </html>
