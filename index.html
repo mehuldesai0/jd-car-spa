@@ -24,7 +24,7 @@
         nav a { margin-left: 20px; font-weight: 500; text-transform: uppercase; font-size: 14px; cursor: pointer; transition: color 0.3s; }
         nav a:hover { color: #e50914; }
 
-        /* FLOATING ADMIN BUTTON (ખાસ મોબાઈલ અને કમ્પ્યુટર બંને માટે) */
+        /* FLOATING ADMIN BUTTON (હવે આ સીધી લિંક તરીકે કામ કરશે) */
         .floating-admin-btn {
             position: fixed; bottom: 25px; right: 25px; 
             background-color: #e50914; color: white; 
@@ -32,9 +32,7 @@
             display: flex; justify-content: center; align-items: center;
             font-size: 22px; cursor: pointer; z-index: 9999;
             box-shadow: 0 4px 15px rgba(229, 9, 20, 0.4);
-            transition: transform 0.2s;
         }
-        .floating-admin-btn:hover { transform: scale(1.1); background-color: #b20710; }
 
         /* Hero Section */
         .hero {
@@ -74,22 +72,6 @@
 
         .success-box { display: none; background-color: #1b5e20; color: white; padding: 20px; border-radius: 6px; text-align: center; font-weight: bold; border: 1px solid #4caf50; }
 
-        /* POPUP MODAL BACKGROUND FOR ADMIN LOGIN */
-        .modal-bg {
-            display: none; position: fixed; top:0; left:0; width:100%; height:100%;
-            background: rgba(0,0,0,0.85); z-index: 2000; justify-content:center; align-items:center;
-        }
-        .admin-popup { background-color: #1a1a1a; padding: 40px; border-radius: 8px; border: 2px solid #e50914; width: 100%; max-width: 450px; position: relative; }
-        .close-popup { position: absolute; top:15px; right:20px; font-size:24px; cursor:pointer; color:#aaa; }
-        .close-popup:hover { color:white; }
-
-        /* Admin Dashboard Table (Full Page View) */
-        .dashboard-view { display: none; padding: 100px 5% 50px; background-color: #0b0b0b; min-height: 100vh; text-align: center; }
-        .booking-table { width: 100%; border-collapse: collapse; margin-top: 30px; background-color: #1a1a1a; color: white; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-        .booking-table th, .booking-table td { padding: 14px; text-align: left; border-bottom: 1px solid #3a3a3a; }
-        .booking-table th { background-color: #e50914; text-transform: uppercase; font-size: 14px; letter-spacing: 1px; }
-        .booking-table tr:hover { background-color: #222; }
-
         /* Gallery Section */
         .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
         .gallery-item { position: relative; overflow: hidden; border-radius: 8px; height: 260px; }
@@ -107,18 +89,17 @@
             header { padding: 15px 5%; } nav { display: none; }
             .hero h1 { font-size: 34px; } .hero p { font-size: 16px; }
             .info-item { padding-left: 0; justify-content: center; }
-            .booking-table { font-size: 12px; display: block; overflow-x: auto; }
         }
     </style>
 </head>
 <body>
 
-    <!-- TARTEERU LOCK BUTTON FOR OWNER -->
-    <div class="floating-admin-btn" onclick="openAdminPopup()" title="Owner Login">
-        <i class="fa-solid fa-user-lock"></i>
-    </div>
+    <!-- 🔑 ઓરિજિનલ SUPABASE ડેશબોર્ડ ખોલવા માટેની ડાયરેક્ટ લિંક -->
+    <a href="https://supabase.com" target="_blank" class="floating-admin-btn" title="Open Supabase Dashboard">
+        <i class="fa-solid fa-database"></i>
+    </a>
 
-    <!-- Main Website Container (Hidden when Dashboard is active) -->
+    <!-- Main Website Container -->
     <div id="main-website-layout">
         <header>
             <div class="logo"><span>JD</span> CAR SPA</div>
@@ -128,6 +109,7 @@
                 <a href="#booking">Book Slot</a>
                 <a href="#gallery">Our Work</a>
                 <a href="#contact">Contact</a>
+                <a href="https://supabase.com" target="_blank" style="color:#e50914; font-weight:bold;"><i class="fa-solid fa-lock"></i> Admin</a>
             </nav>
         </header>
 
@@ -180,7 +162,7 @@
                     <input type="hidden" id="selectedSlotValue" required>
                     <button type="submit" class="btn" style="width: 100%; justify-content: center; margin-top: 15px;">Confirm My Booking</button>
                 </form>
-                <div class="success-box" id="successMessage"><i class="fa-solid fa-circle-check"></i><br><br>Booking Successful! Your slot has been reserved in our system.</div>
+                <div class="success-box" id="successMessage"><i class="fa-solid fa-circle-check"></i><br><br>Booking Successful! Your slot has been reserved.</div>
             </div>
         </section>
 
@@ -208,48 +190,14 @@
         <footer><p>&copy; 2026 JD CAR SPA. All Rights Reserved. Built with ❤️</p></footer>
     </div>
 
-    <!-- POPUP MODAL LOGIN WINDOW -->
-    <div id="adminModal" class="modal-bg">
-        <div class="admin-popup">
-            <span class="close-popup" onclick="closeAdminPopup()">&times;</span>
-            <h2 style="font-size:24px; margin-bottom:20px; text-align:center; color:#e50914;">OWNER LOGIN</h2>
-            <div class="form-group"><label>Admin ID</label><input type="text" id="adminId" class="form-control" placeholder="Enter ID"></div>
-            <div class="form-group"><label>Password</label><input type="password" id="adminPass" class="form-control" placeholder="Enter password"></div>
-            <button onclick="checkAdminLogin()" class="btn" style="width:100%; justify-content:center; margin-top:10px;">Login</button>
-        </div>
-    </div>
-
-    <!-- FULL PAGE LIVE DASHBOARD TABLE -->
-    <div id="dashboardPage" class="dashboard-view">
-        <h2>JD CAR SPA - LIVE BOOKINGS</h2>
-        <div style="margin: 20px 0; display:flex; justify-content:center; gap:15px;">
-            <button onclick="loadBookings()" class="btn" style="background:#222; border:1px solid #3a3a3a;"><i class="fa-solid fa-rotate"></i> Refresh Data</button>
-            <button onclick="logoutAdmin()" class="btn" style="background:#555;"><i class="fa-solid fa-right-from-bracket"></i> Close Dashboard</button>
-        </div>
-        <table class="booking-table">
-            <thead>
-                <tr>
-                    <th>Date</th><th>Time Slot</th><th>Customer Name</th><th>Phone</th><th>Car Model</th><th>Service</th>
-                </tr>
-            </thead>
-            <tbody id="bookingsTableBody">
-                <tr><td colspan="6" style="text-align:center;">Loading records...</td></tr>
-            </tbody>
-        </table>
-    </div>
-
     <script>
-        // ⚠️ તમારા SUPABASE ની DETAILS અહીં લાઈન ૧૬૯ અને ૧૭૦ માં નાખો:
+        // ⚠️ તમારા SUPABASE ની DETAILS નીચેની ૨ લાઈનમાં પેસ્ટ કરો:
         const SUPABASE_URL = "તમારી_SUPABASE_URL_અહીં_નાખો";
         const SUPABASE_KEY = "તમારી_SUPABASE_ANON_KEY_અહીં_નાખો";
 
         let supabase = null;
-        try {
-            if(SUPABASE_URL && SUPABASE_URL !== "તમારી_SUPABASE_URL_અહીં_નાખો" && SUPABASE_URL.trim() !== "") {
-                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-            }
-        } catch(e) {
-            console.log("Supabase error handled.");
+        if(SUPABASE_URL && SUPABASE_URL !== "તમારી_SUPABASE_URL_અહીં_નાખો") {
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         }
 
         document.getElementById('bookingDate').setAttribute('min', new Date().toISOString().split('T')[0]);
@@ -262,10 +210,7 @@
 
         async function handleFormSubmit(event) {
             event.preventDefault();
-            if(!supabase) { 
-                alert("Supabase Keys Not Found! Please configure Line 169 & 170."); 
-                return; 
-            }
+            if(!supabase) { alert("Please set your Supabase Keys first!"); return; }
 
             const name = document.getElementById('custName').value;
             const phone = document.getElementById('custPhone').value;
@@ -282,62 +227,6 @@
             else {
                 document.getElementById('spaBookingForm').style.display = 'none';
                 document.getElementById('successMessage').style.display = 'block';
-            }
-        }
-
-        // Popup Open/Close
-        function openAdminPopup() { 
-            document.getElementById('adminModal').style.display = 'flex'; 
-        }
-        function closeAdminPopup() { 
-            document.getElementById('adminModal').style.display = 'none'; 
-        }
-
-        function checkAdminLogin() {
-            const id = document.getElementById('adminId').value;
-            const pass = document.getElementById('adminPass').value;
-
-            if(id === "admin" && pass === "jdcarspa2026") {
-                closeAdminPopup();
-                document.getElementById('main-website-layout').style.display = 'none';
-                document.getElementById('dashboardPage').style.display = 'block';
-                loadBookings();
-            } else {
-                alert("ખોટો ID અથવા પાસવર્ડ!");
-            }
-        }
-
-        function logoutAdmin() {
-            document.getElementById('dashboardPage').style.display = 'none';
-            document.getElementById('main-website-layout').style.display = 'block';
-        }
-
-        async function loadBookings() {
-            const tbody = document.getElementById('bookingsTableBody');
-            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">Fetching records...</td></tr>`;
-            
-            if(!supabase) { 
-                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#ff9800; padding:20px;">⚠️ એડમિન લૉગિન સક્સેસફુલ!<br><br>પરંતુ, તમે લાઈન ૧૬૯ માં Supabase URL સેટ નથી કરી, જેથી ડેટાબેઝ કનેક્ટ નથી થયો. પહેલા કી એડ કરો!</td></tr>`; 
-                return; 
-            }
-
-            const { data, error } = await supabase.from('bookings').select('*').order('date', { ascending: true });
-
-            if (error) { tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:red;">Error loading data!</td></tr>`; } 
-            else if (data.length === 0) { tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">No data available.</td></tr>`; } 
-            else {
-                tbody.innerHTML = "";
-                data.forEach(b => {
-                    tbody.innerHTML += `
-                        <tr>
-                            <td><strong>${b.date}</strong></td>
-                            <td><span style="background:#e50914; padding:3px 8px; border-radius:3px; font-size:13px;">${b.slot}</span></td>
-                            <td>${b.name}</td>
-                            <td><a href="tel:${b.phone}" style="color:#4caf50;"><i class="fa-solid fa-phone"></i> ${b.phone}</a></td>
-                            <td>🚗 ${b.car}</td>
-                            <td><em>${b.service}</em></td>
-                        </tr>`;
-                });
             }
         }
     </script>
