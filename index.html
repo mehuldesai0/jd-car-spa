@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JD CAR SPA | Premium Detailing Studio</title>
+    <!-- FontAwesome Icons Link -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Basic Reset & Premium Dark Theme */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Header & Navigation */
+        header {
+            background-color: #1a1a1a;
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid #e50914;
+        }
+        .logo {
+            font-size: 26px;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: 1px;
+        }
+        .logo span {
+            color: #e50914;
+        }
+        nav a {
+            margin-left: 20px;
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 14px;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+        }
+        nav a:hover {
+            color: #e50914;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1607860108855-64acf2078ed9?auto=format&fit=crop&w=1920&q=80') no-repeat center center/cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+            padding-top: 80px;
+        }
+        .hero h1 {
+            font-size: 52px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 800;
+        }
+        .hero p {
+            font-size: 20px;
+            color: #ccc;
+            margin-bottom: 35px;
+            max-width: 700px;
+        }
+        .btn {
+            background-color: #e50914;
+            color: white;
+            padding: 14px 35px;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 5px;
+            transition: background 0.3s, transform 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            border: none;
+        }
+        .btn:hover {
+            background-color: #b20710;
+            transform: scale(1.05);
+        }
+
+        /* Section Common Styles */
+        section {
+            padding: 90px 5%;
+            text-align: center;
+        }
+        section h2 {
+            font-size: 36px;
+            margin-bottom: 50px;
+            position: relative;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+        section h2::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background-color: #e50914;
+            margin: 12px auto 0;
+        }
+
+        /* Services Grid */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 20px;
+        }
+        .service-card {
+            background-color: #1a1a1a;
+            padding: 45px 25px;
+            border-radius: 8px;
+            border: 1px solid #2a2a2a;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+        .service-card:hover {
+            transform: translateY(-10px);
+            border-color: #e50914;
+        }
+        .service-card i {
+            font-size: 42px;
+            color: #e50914;
+            margin-bottom: 22px;
+        }
+        .service-card h3 {
+            font-size: 22px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+        .service-card p {
+            color: #aaa;
+            font-size: 15px;
+        }
+
+        /* Booking Section */
+        .booking-container {
+            max-width: 700px;
+            margin: 0 auto;
+            background-color: #1a1a1a;
+            padding: 40px;
+            border-radius: 8px;
+            border: 1px solid #2a2a2a;
+            text-align: left;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #ccc;
+        }
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            background-color: #2a2a2a;
+            border: 1px solid #3a3a3a;
+            color: white;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: #e50914;
+        }
+        
+        /* Time Slots Grid */
+        .slots-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 12px;
+            margin-top: 10px;
+        }
+        .slot-option {
+            background-color: #2a2a2a;
+            border: 1px solid #3a3a3a;
+            padding: 12px;
+            text-align: center;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        .slot-option:hover {
+            border-color: #e50914;
+            background-color: #222;
+        }
+        .slot-option.selected {
+            background-color: #e50914;
+            border-color: #e50914;
+            color: white;
+        }
+        .slot-option.booked {
+            background-color: #111;
+            border-color: #222;
+            color: #555;
+            cursor: not-allowed;
+            text-decoration: line-through;
+        }
+
+        /* Success Message Alert */
+        .success-box {
+            display: none;
+            background-color: #1b5e20;
+            color: white;
+            padding: 20px;
+            border-radius: 6px;
+            margin-top: 20px;
+            text-align: center;
+            font-weight: bold;
+            border: 1px solid #4caf50;
+        }
+
+        /* Gallery Section */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            height: 260px;
+        }
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+        .gallery-label {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            background: rgba(229, 9, 20, 0.9);
+            padding: 6px 18px;
+            font-weight: bold;
+            font-size: 13px;
+            text-transform: uppercase;
+            border-radius: 4px;
+        }
+
+        /* Contact Section */
+        .contact-info {
+            max-width: 650px;
+            margin: 0 auto;
+            background-color: #1a1a1a;
+            padding: 45px;
+            border-radius: 8px;
+            border: 1px solid #2a2a2a;
+        }
+        .info-item {
+            margin-bottom: 25px;
+            font-size: 17px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 20px;
+            text-align: left;
+            padding-left: 10%;
+        }
+        .info-item i {
+            color: #e50914;
+            font-size: 22px;
+            width: 30px;
+            text-align: center;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #0b0b0b;
+            padding: 25px;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            border-top: 1px solid #1a1a1a;
+        }
+
+        @media (max-width: 768px) {
+            header { padding: 15px 5%; }
+            nav { display: none; }
+            .hero h1 { font-size: 34px; }
+            .hero p { font-size: 16px; }
+            section h2 { font-size: 28px; }
+            .info-item { padding-left: 0; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header>
+        <div class="logo"><span>JD</span> CAR SPA</div>
+        <nav>
+            <a href="#home">Home</a>
+            <a href="#services">Services</a>
+            <a href="#booking">Book Slot</a>
+            <a href="#gallery">Our Work</a>
+            <a href="#contact">Contact</a>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <h1>Give Your Car A Showroom Shine</h1>
+        <p>JD CAR SPA — Professional detailing, ultra-gloss ceramic coatings, and deep cleaning services now in Dharampur.</p>
+        <a href="#booking" class="btn">
+            <i class="fa-solid fa-calendar-check"></i> Book Online Slot Now
+        </a>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services">
+        <h2>Our Services</h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <h3>Ceramic Coating</h3>
+                <p>Premium 9H ultra-gloss paint protection shield against scratches, UV rays, and environmental damage.</p>
+            </div>
+            <div class="service-card">
+                <i class="fa-solid fa-car-clean"></i>
+                <h3>Interior Detailing</h3>
+                <p>Complete deep vacuuming, steam sanitization, and conditioning for seats, roof, and dashboard.</p>
+            </div>
+            <div class="service-card">
+                <i class="fa-solid fa-shield-halved"></i>
+                <h3>Paint Protection Film (PPF)</h3>
+                <p>High-grade self-healing clear film installation to preserve your vehicle's factory paint long-term.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Live Booking Section -->
+    <section id="booking" style="background-color: #0b0b0b;">
+        <h2>Book Your Appointment</h2>
+        <div class="booking-container">
+            <form id="spaBookingForm" onsubmit="handleFormSubmit(event)">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" class="form-control" required placeholder="Enter your full name">
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" class="form-control" required placeholder="Enter your mobile number">
+                </div>
+                <div class="form-group">
+                    <label>Select Service</label>
+                    <select class="form-control" required>
+                        <option value="">-- Choose a Service --</option>
+                        <option value="ceramic">Ceramic Coating</option>
+                        <option value="interior">Deep Interior Detailing</option>
+                        <option value="ppf">Paint Protection Film (PPF)</option>
+                        <option value="full-wash">Full Body Spa & Wash</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Select Date</label>
+                    <input type="date" id="bookingDate" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Select Available Time Slot</label>
+                    <div class="slots-grid" id="slotsContainer">
+                        <div class="slot-option" onclick="selectSlot(this)">09:00 AM</div>
+                        <div class="slot-option" onclick="selectSlot(this)">11:00 AM</div>
+                        <div class="slot-option" onclick="selectSlot(this)">01:00 PM</div>
+                        <div class="slot-option booked">03:00 PM (Full)</div>
+                        <div class="slot-option" onclick="selectSlot(this)">04:00 PM</div>
+                        <div class="slot-option" onclick="selectSlot(this)">05:30 PM</div>
+                    </div>
+                </div>
+                
+                <input type="hidden" id="selectedSlotValue" required>
+                
+                <button type="submit" class="btn" style="width: 100%; justify-content: center; margin-top: 10px;">
+                    Confirm My Booking
+                </button>
+            </form>
+
+            <div class="success-box" id="successMessage">
+                <i class="fa-solid fa-circle-check"></i><br><br>
+                <span id="successText">Booking Successful! Your slot has been reserved.</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery">
+        <h2>Our Best Work</h2>
+        <div class="gallery-grid">
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=600&q=80" alt="Interior Cleaning">
+                <div class="gallery-label">Deep Interior Clean</div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=600&q=80" alt="Ceramic Coating">
+                <div class="gallery-label">Ceramic Gloss Finish</div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1520340356584-f9917d1eea6f?auto=format&fit=crop&w=600&q=80" alt="Exterior Polish">
+                <div class="gallery-label">Paint Correction</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" style="background-color: #1a1a1a;">
+        <h2>Contact Us</h2>
+        <div class="contact-info">
+            <div class="info-item">
+                <i class="fa-solid fa-location-dot"></i>
+                <span>Near Sarvottam Fastfood, Dharampur, Gujarat - 396050</span>
+            </div>
+            <div class="info-item">
+                <i class="fa-solid fa-phone"></i>
+                <span>+91 95747 23722</span>
+            </div>
+            <div class="info-item">
+                <i class="fa-solid fa-envelope"></i>
+                <span>jdcarspa27@gmail.com</span>
+            </div>
+            <div class="info-item">
+                <i class="fa-solid fa-clock"></i>
+                <span>09:00 AM - 06:00 PM (Monday to Saturday)</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 JD CAR SPA. All Rights Reserved. Built with ❤️</p>
+    </footer>
+
+    <!-- Booking Interactive JavaScript -->
+    <script>
+        // Set minimum date to today
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('bookingDate').setAttribute('min', today);
+
+        // Slot selection function
+        function selectSlot(element) {
+            if (element.classList.contains('booked')) return;
+            
+            const slots = document.querySelectorAll('.slot-option');
+            slots.forEach(slot => slot.classList.remove('selected'));
+            
+            element.classList.add('selected');
+            document.getElementById('selectedSlotValue').value = element.innerText;
+        }
+
+        // Form Submit Handler
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            
+            const selectedSlot = document.getElementById('selectedSlotValue').value;
+            const chosenDate = document.getElementById('bookingDate').value;
+            
+            if (!selectedSlot) {
+                alert("Please select an available time slot before confirming!");
+                return;
+            }
+
+            document.getElementById('spaBookingForm').style.display = 'none';
+            
+            const successBox = document.getElementById('successMessage');
+            const successText = document.getElementById('successText');
+            
+            successText.innerHTML = `Booking Confirmed!<br><br>We have reserved your slot for <strong>${chosenDate}</strong> at <strong>${selectedSlot}</strong>. See you at JD CAR SPA!`;
+            successBox.style.display = 'block';
+        }
+    </script>
+
+</body>
+</html>
