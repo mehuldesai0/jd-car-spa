@@ -4,16 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JD CAR SPA | Premium Detailing Studio</title>
-    <!-- FontAwesome Icons & Supabase CDN -->
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        /* Basic Reset & Premium Dark Theme */
+        /* Premium Dark Theme */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         body { background-color: #121212; color: #ffffff; line-height: 1.6; }
         a { text-decoration: none; color: inherit; }
 
-        /* Header & Navigation */
         header {
             background-color: #1a1a1a; padding: 20px 5%; display: flex;
             justify-content: space-between; align-items: center;
@@ -21,20 +19,19 @@
         }
         .logo { font-size: 26px; font-weight: 800; letter-spacing: 1px; }
         .logo span { color: #e50914; }
-        nav a { margin-left: 20px; font-weight: 500; text-transform: uppercase; font-size: 14px; cursor: pointer; transition: color 0.3s; }
+        nav a { margin-left: 20px; font-weight: 500; text-transform: uppercase; font-size: 14px; cursor: pointer; }
         nav a:hover { color: #e50914; }
 
-        /* FLOATING ADMIN BUTTON (હવે આ સીધી લિંક તરીકે કામ કરશે) */
-        .floating-admin-btn {
+        /* WHATSAPP FLOATING BUTTON */
+        .whatsapp-float {
             position: fixed; bottom: 25px; right: 25px; 
-            background-color: #e50914; color: white; 
+            background-color: #25d366; color: white; 
             width: 55px; height: 55px; border-radius: 50%;
             display: flex; justify-content: center; align-items: center;
-            font-size: 22px; cursor: pointer; z-index: 9999;
-            box-shadow: 0 4px 15px rgba(229, 9, 20, 0.4);
+            font-size: 28px; z-index: 9999;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
         }
 
-        /* Hero Section */
         .hero {
             height: 100vh; background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1607860108855-64acf2078ed9?auto=format&fit=crop&w=1920&q=80') no-repeat center center/cover;
             display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 20px; padding-top: 80px;
@@ -43,46 +40,35 @@
         .hero p { font-size: 20px; color: #ccc; margin-bottom: 35px; max-width: 700px; }
         .btn {
             background-color: #e50914; color: white; padding: 14px 35px; font-size: 16px; font-weight: bold;
-            text-transform: uppercase; border-radius: 5px; transition: background 0.3s, transform 0.2s;
-            display: inline-flex; align-items: center; gap: 10px; cursor: pointer; border: none;
+            text-transform: uppercase; border-radius: 5px; cursor: pointer; border: none; display: inline-flex; align-items: center; gap: 10px;
         }
-        .btn:hover { background-color: #b20710; transform: scale(1.05); }
+        .btn:hover { background-color: #b20710; }
 
-        /* Section Common Styles */
         section { padding: 90px 5%; text-align: center; }
         section h2 { font-size: 36px; margin-bottom: 50px; text-transform: uppercase; position: relative; }
         section h2::after { content: ''; display: block; width: 60px; height: 4px; background-color: #e50914; margin: 12px auto 0; }
 
-        /* Services Grid */
-        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin-top: 20px; }
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
         .service-card { background-color: #1a1a1a; padding: 45px 25px; border-radius: 8px; border: 1px solid #2a2a2a; }
         .service-card i { font-size: 42px; color: #e50914; margin-bottom: 22px; }
-        .service-card h3 { font-size: 22px; margin-bottom: 15px; text-transform: uppercase; }
-        .service-card p { color: #aaa; font-size: 15px; }
 
-        /* Booking Form Styles */
         .booking-container { max-width: 700px; margin: 0 auto; background-color: #1a1a1a; padding: 40px; border-radius: 8px; border: 1px solid #2a2a2a; text-align: left; }
         .form-group { margin-bottom: 20px; }
         .form-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px; text-transform: uppercase; color: #ccc; }
         .form-control { width: 100%; padding: 12px; background-color: #2a2a2a; border: 1px solid #3a3a3a; color: white; border-radius: 4px; font-size: 16px; }
         
         .slots-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin-top: 10px; }
-        .slot-option { background-color: #2a2a2a; border: 1px solid #3a3a3a; padding: 12px; text-align: center; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 14px; }
+        .slot-option { background-color: #2a2a2a; border: 1px solid #3a3a3a; padding: 12px; text-align: center; border-radius: 4px; cursor: pointer; font-weight: bold; }
         .slot-option.selected { background-color: #e50914; border-color: #e50914; color: white; }
 
-        .success-box { display: none; background-color: #1b5e20; color: white; padding: 20px; border-radius: 6px; text-align: center; font-weight: bold; border: 1px solid #4caf50; }
-
-        /* Gallery Section */
         .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
         .gallery-item { position: relative; overflow: hidden; border-radius: 8px; height: 260px; }
-        .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
-        .gallery-item:hover img { transform: scale(1.1); }
+        .gallery-item img { width: 100%; height: 100%; object-fit: cover; }
         .gallery-label { position: absolute; bottom: 15px; left: 15px; background: rgba(229, 9, 20, 0.9); padding: 6px 18px; font-weight: bold; font-size: 13px; text-transform: uppercase; border-radius: 4px; }
 
-        /* Contact & Footer */
         .contact-info { max-width: 650px; margin: 0 auto; background-color: #1a1a1a; padding: 45px; border-radius: 8px; border: 1px solid #2a2a2a; }
         .info-item { margin-bottom: 25px; font-size: 17px; display: flex; align-items: center; gap: 20px; padding-left: 10%; }
-        .info-item i { color: #e50914; font-size: 22px; width: 30px; text-align: center; }
+        .info-item i { color: #e50914; font-size: 22px; }
         footer { background-color: #0b0b0b; padding: 25px; text-align: center; color: #666; font-size: 14px; border-top: 1px solid #1a1a1a; }
 
         @media (max-width: 768px) {
@@ -94,112 +80,96 @@
 </head>
 <body>
 
-    <!-- 🔑 ઓરિજિનલ SUPABASE ડેશબોર્ડ ખોલવા માટેની ડાયરેક્ટ લિંક -->
-    <a href="https://supabase.com" target="_blank" class="floating-admin-btn" title="Open Supabase Dashboard">
-        <i class="fa-solid fa-database"></i>
+    <!-- 🟢 સીધું વોટ્સએપ ઓપન કરવા માટેનું લીલું બટન -->
+    <a href="https://wa.me/919574723722" target="_blank" class="whatsapp-float" title="Contact Owner">
+        <i class="fa-brands fa-whatsapp"></i>
     </a>
 
-    <!-- Main Website Container -->
-    <div id="main-website-layout">
-        <header>
-            <div class="logo"><span>JD</span> CAR SPA</div>
-            <nav>
-                <a href="#home">Home</a>
-                <a href="#services">Services</a>
-                <a href="#booking">Book Slot</a>
-                <a href="#gallery">Our Work</a>
-                <a href="#contact">Contact</a>
-                <a href="https://supabase.com" target="_blank" style="color:#e50914; font-weight:bold;"><i class="fa-solid fa-lock"></i> Admin</a>
-            </nav>
-        </header>
+    <header>
+        <div class="logo"><span>JD</span> CAR SPA</div>
+        <nav>
+            <a href="#home">Home</a>
+            <a href="#services">Services</a>
+            <a href="#booking">Book Slot</a>
+            <a href="#gallery">Our Work</a>
+            <a href="#contact">Contact</a>
+            <a href="https://wa.me/919574723722" target="_blank" style="color:#25d366; font-weight:bold;"><i class="fa-brands fa-whatsapp"></i> Chat</a>
+        </nav>
+    </header>
 
-        <!-- Hero Section -->
-        <section id="home" class="hero">
-            <h1>Give Your Car A Showroom Shine</h1>
-            <p>JD CAR SPA — Professional detailing, ultra-gloss coatings, and deep cleaning now in Dharampur.</p>
-            <a href="#booking" class="btn"><i class="fa-solid fa-calendar-check"></i> Book Online Slot Now</a>
-        </section>
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <h1>Give Your Car A Showroom Shine</h1>
+        <p>JD CAR SPA — Professional detailing, ultra-gloss coatings, and deep cleaning now in Dharampur.</p>
+        <a href="#booking" class="btn"><i class="fa-solid fa-calendar-check"></i> Book Online Slot Now</a>
+    </section>
 
-        <!-- Services Section -->
-        <section id="services">
-            <h2>Our Services</h2>
-            <div class="services-grid">
-                <div class="service-card"><i class="fa-solid fa-wand-magic-sparkles"></i><h3>Ceramic Coating</h3><p>Premium 9H ultra-gloss paint protection shield against scratches and UV rays.</p></div>
-                <div class="service-card"><i class="fa-solid fa-car-clean"></i><h3>Interior Detailing</h3><p>Complete deep vacuuming, steam sanitization, and conditioning for interior.</p></div>
-                <div class="service-card"><i class="fa-solid fa-shield-halved"></i><h3>Paint Protection Film (PPF)</h3><p>High-grade self-healing clear film installation to preserve your vehicle's factory paint.</p></div>
-            </div>
-        </section>
+    <!-- Services Section -->
+    <section id="services">
+        <h2>Our Services</h2>
+        <div class="services-grid">
+            <div class="service-card"><i class="fa-solid fa-wand-magic-sparkles"></i><h3>Ceramic Coating</h3><p>Premium 9H ultra-gloss paint protection shield.</p></div>
+            <div class="service-card"><i class="fa-solid fa-car-clean"></i><h3>Interior Detailing</h3><p>Complete deep vacuuming and sanitization.</p></div>
+            <div class="service-card"><i class="fa-solid fa-shield-halved"></i><h3>Paint Protection Film (PPF)</h3><p>High-grade self-healing clear film installation.</p></div>
+        </div>
+    </section>
 
-        <!-- Live Booking Section -->
-        <section id="booking" style="background-color: #0b0b0b;">
-            <h2>Book Your Appointment</h2>
-            <div class="booking-container">
-                <form id="spaBookingForm" onsubmit="handleFormSubmit(event)">
-                    <div class="form-group"><label>Full Name</label><input type="text" id="custName" class="form-control" required placeholder="Enter your name"></div>
-                    <div class="form-group"><label>Phone Number</label><input type="tel" id="custPhone" class="form-control" required placeholder="Enter mobile number"></div>
-                    <div class="form-group"><label>Car Brand & Model</label><input type="text" id="carModel" class="form-control" required placeholder="e.g. Swift, Fortuner, i20"></div>
-                    <div class="form-group">
-                        <label>Select Service</label>
-                        <select id="selectedService" class="form-control" required>
-                            <option value="">-- Choose a Service --</option>
-                            <option value="Ceramic Coating">Ceramic Coating</option>
-                            <option value="Deep Interior Detailing">Deep Interior Detailing</option>
-                            <option value="Paint Protection Film (PPF)">Paint Protection Film (PPF)</option>
-                            <option value="Full Body Spa & Wash">Full Body Spa & Wash</option>
-                        </select>
+    <!-- Booking Section -->
+    <section id="booking" style="background-color: #0b0b0b;">
+        <h2>Book Your Appointment</h2>
+        <div class="booking-container">
+            <form id="spaBookingForm" onsubmit="sendToWhatsApp(event)">
+                <div class="form-group"><label>Full Name</label><input type="text" id="custName" class="form-control" required placeholder="Enter your name"></div>
+                <div class="form-group"><label>Phone Number</label><input type="tel" id="custPhone" class="form-control" required placeholder="Enter mobile number"></div>
+                <div class="form-group"><label>Car Brand & Model</label><input type="text" id="carModel" class="form-control" required placeholder="e.g. Swift, Fortuner"></div>
+                <div class="form-group">
+                    <label>Select Service</label>
+                    <select id="selectedService" class="form-control" required>
+                        <option value="">-- Choose a Service --</option>
+                        <option value="Ceramic Coating">Ceramic Coating</option>
+                        <option value="Deep Interior Detailing">Deep Interior Detailing</option>
+                        <option value="Paint Protection Film (PPF)">Paint Protection Film (PPF)</option>
+                        <option value="Full Body Spa & Wash">Full Body Spa & Wash</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>Select Date</label><input type="date" id="bookingDate" class="form-control" required></div>
+                <div class="form-group">
+                    <label>Select Time Slot</label>
+                    <div class="slots-grid">
+                        <div class="slot-option" onclick="selectSlot(this)">09:00 AM</div>
+                        <div class="slot-option" onclick="selectSlot(this)">11:00 AM</div>
+                        <div class="slot-option" onclick="selectSlot(this)">01:00 PM</div>
+                        <div class="slot-option" onclick="selectSlot(this)">03:00 PM</div>
+                        <div class="slot-option" onclick="selectSlot(this)">04:30 PM</div>
                     </div>
-                    <div class="form-group"><label>Select Date</label><input type="date" id="bookingDate" class="form-control" required></div>
-                    <div class="form-group">
-                        <label>Select Available Time Slot</label>
-                        <div class="slots-grid">
-                            <div class="slot-option" onclick="selectSlot(this)">09:00 AM</div>
-                            <div class="slot-option" onclick="selectSlot(this)">11:00 AM</div>
-                            <div class="slot-option" onclick="selectSlot(this)">01:00 PM</div>
-                            <div class="slot-option" onclick="selectSlot(this)">03:00 PM</div>
-                            <div class="slot-option" onclick="selectSlot(this)">04:30 PM</div>
-                        </div>
-                    </div>
-                    <input type="hidden" id="selectedSlotValue" required>
-                    <button type="submit" class="btn" style="width: 100%; justify-content: center; margin-top: 15px;">Confirm My Booking</button>
-                </form>
-                <div class="success-box" id="successMessage"><i class="fa-solid fa-circle-check"></i><br><br>Booking Successful! Your slot has been reserved.</div>
-            </div>
-        </section>
+                </div>
+                <input type="hidden" id="selectedSlotValue" required>
+                <button type="submit" class="btn" style="width: 100%; justify-content: center; margin-top: 15px;"><i class="fa-brands fa-whatsapp"></i> Send Booking via WhatsApp</button>
+            </form>
+        </div>
+    </section>
 
-        <!-- Gallery Section -->
-        <section id="gallery">
-            <h2>Our Best Work</h2>
-            <div class="gallery-grid">
-                <div class="gallery-item"><img src="https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=600&q=80" alt="Clean"><div class="gallery-label">Deep Interior Clean</div></div>
-                <div class="gallery-item"><img src="https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=600&q=80" alt="Gloss"><div class="gallery-label">Ceramic Gloss Finish</div></div>
-                <div class="gallery-item"><img src="https://images.unsplash.com/photo-1520340356584-f9917d1eea6f?auto=format&fit=crop&w=600&q=80" alt="Paint"><div class="gallery-label">Paint Correction</div></div>
-            </div>
-        </section>
+    <!-- Gallery Section -->
+    <section id="gallery">
+        <h2>Our Best Work</h2>
+        <div class="gallery-grid">
+            <div class="gallery-item"><img src="https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=600&q=80" alt="Clean"><div class="gallery-label">Deep Interior Clean</div></div>
+            <div class="gallery-item"><img src="https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=600&q=80" alt="Gloss"><div class="gallery-label">Ceramic Gloss Finish</div></div>
+        </div>
+    </section>
 
-        <!-- Contact Section -->
-        <section id="contact" style="background-color: #1a1a1a;">
-            <h2>Contact Us</h2>
-            <div class="contact-info">
-                <div class="info-item"><i class="fa-solid fa-location-dot"></i><span>Near Sarvottam Fastfood, Dharampur, Gujarat - 396050</span></div>
-                <div class="info-item"><i class="fa-solid fa-phone"></i><span>+91 95747 23722</span></div>
-                <div class="info-item"><i class="fa-solid fa-envelope"></i><span>jdcarspa27@gmail.com</span></div>
-                <div class="info-item"><i class="fa-solid fa-clock"></i><span>09:00 AM - 06:00 PM (Mon to Sat)</span></div>
-            </div>
-        </section>
+    <!-- Contact Section -->
+    <section id="contact" style="background-color: #1a1a1a;">
+        <h2>Contact Us</h2>
+        <div class="contact-info">
+            <div class="info-item"><i class="fa-solid fa-location-dot"></i><span>Near Sarvottam Fastfood, Dharampur, Gujarat - 396050</span></div>
+            <div class="info-item"><i class="fa-solid fa-phone"></i><span>+91 95747 23722</span></div>
+        </div>
+    </section>
 
-        <footer><p>&copy; 2026 JD CAR SPA. All Rights Reserved. Built with ❤️</p></footer>
-    </div>
+    <footer><p>&copy; 2026 JD CAR SPA. All Rights Reserved.</p></footer>
 
     <script>
-        // ⚠️ તમારા SUPABASE ની DETAILS નીચેની ૨ લાઈનમાં પેસ્ટ કરો:
-        const SUPABASE_URL = "તમારી_SUPABASE_URL_અહીં_નાખો";
-        const SUPABASE_KEY = "તમારી_SUPABASE_ANON_KEY_અહીં_નાખો";
-
-        let supabase = null;
-        if(SUPABASE_URL && SUPABASE_URL !== "તમારી_SUPABASE_URL_અહીં_નાખો") {
-            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-        }
-
         document.getElementById('bookingDate').setAttribute('min', new Date().toISOString().split('T')[0]);
 
         function selectSlot(element) {
@@ -208,9 +178,8 @@
             document.getElementById('selectedSlotValue').value = element.innerText;
         }
 
-        async function handleFormSubmit(event) {
+        function sendToWhatsApp(event) {
             event.preventDefault();
-            if(!supabase) { alert("Please set your Supabase Keys first!"); return; }
 
             const name = document.getElementById('custName').value;
             const phone = document.getElementById('custPhone').value;
@@ -221,13 +190,19 @@
 
             if (!slot) { alert("Please select a time slot!"); return; }
 
-            const { data, error } = await supabase.from('bookings').insert([{ name, phone, car, service, date, slot }]);
+            // મસ્ત ગુજરાતી મેસેજ જે તમારા વોટ્સએપ પર આવશે
+            const message = `*નવું કાર સ્પા બુકિંગ!* 🚗✨\n\n` +
+                            `👤 *નામ:* ${name}\n` +
+                            `📞 *મોબાઈલ:* ${phone}\n` +
+                            `🚘 *ગાડી:* ${car}\n` +
+                            `🛠️ *સર્વિસ:* ${service}\n` +
+                            `📅 *તારીખ:* ${date}\n` +
+                            `⏰ *સમય સ્લોટ:* ${slot}`;
 
-            if (error) { alert("Error saving data!"); } 
-            else {
-                document.getElementById('spaBookingForm').style.display = 'none';
-                document.getElementById('successMessage').style.display = 'block';
-            }
+            const encodedMessage = encodeURIComponent(message);
+            
+            // ડાયરેક્ટ તમારા નંબર પર રીડાયરેક્ટ થશે
+            window.open(`https://wa.me/919574723722?text=${encodedMessage}`, '_blank');
         }
     </script>
 </body>
