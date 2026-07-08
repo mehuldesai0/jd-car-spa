@@ -223,13 +223,17 @@
     </div>
 
     <script>
-        // ⚠️ તમારા SUPABASE ની DETAILS અહીં લાઈન ૧૬૧ અને ૧૬૨ માં ખાસ પેસ્ટ કરી દેજો:
+        // ⚠️ તમારા SUPABASE ની DETAILS અહીં લાઈન ૧૬૫ અને ૧૬૬ માં નાખો:
         const SUPABASE_URL = "તમારી_SUPABASE_URL_અહીં_નાખો";
         const SUPABASE_KEY = "તમારી_SUPABASE_ANON_KEY_અહીં_નાખો";
 
         let supabase = null;
-        if(SUPABASE_URL !== "તમારી_SUPABASE_URL_અહીં_નાખો") {
-            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        try {
+            if(SUPABASE_URL && SUPABASE_URL !== "તમારી_SUPABASE_URL_અહીં_નાખો" && SUPABASE_URL.trim() !== "") {
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            }
+        } catch(e) {
+            console.log("Supabase initialization deferred until keys are provided.");
         }
 
         document.getElementById('bookingDate').setAttribute('min', new Date().toISOString().split('T')[0]);
@@ -242,7 +246,10 @@
 
         async function handleFormSubmit(event) {
             event.preventDefault();
-            if(!supabase) { alert("Please configure your Supabase Keys first!"); return; }
+            if(!supabase) { 
+                alert("તમે હજુ Supabase Keys કોડમાં એડ નથી કરી! કૃપા કરીને લાઈન ૧૬૫ અને ૧૬૬ ચેક કરો."); 
+                return; 
+            }
 
             const name = document.getElementById('custName').value;
             const phone = document.getElementById('custPhone').value;
@@ -255,16 +262,20 @@
 
             const { data, error } = await supabase.from('bookings').insert([{ name, phone, car, service, date, slot }]);
 
-            if (error) { alert("Error saving data!"); } 
+            if (error) { alert("Error saving data to database!"); } 
             else {
                 document.getElementById('spaBookingForm').style.display = 'none';
                 document.getElementById('successMessage').style.display = 'block';
             }
         }
 
-        // Popup Functions
-        function openAdminPopup() { document.getElementById('adminModal').style.display = 'flex'; }
-        function closeAdminPopup() { document.getElementById('adminModal').style.display = 'none'; }
+        // Popup Open/Close Functions (ભૂલ વગર ચાલશે)
+        function openAdminPopup() { 
+            document.getElementById('adminModal').style.display = 'flex'; 
+        }
+        function closeAdminPopup() { 
+            document.getElementById('adminModal').style.display = 'none'; 
+        }
 
         function checkAdminLogin() {
             const id = document.getElementById('adminId').value;
@@ -276,7 +287,7 @@
                 document.getElementById('dashboardPage').style.display = 'block';
                 loadBookings();
             } else {
-                alert("Invalid ID or Password!");
+                alert("ખોટો ID અથવા પાસવર્ડ! ફરીથી પ્રયાસ કરો.");
             }
         }
 
@@ -288,7 +299,11 @@
         async function loadBookings() {
             const tbody = document.getElementById('bookingsTableBody');
             tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">Fetching records...</td></tr>`;
-            if(!supabase) { tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:red;">Supabase Keys Not Found!</td></tr>`; return; }
+            
+            if(!supabase) { 
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#ff9800; padding:20px;">⚠️ એડમિન લૉગિન સક્સેસફુલ!<br><br>પરંતુ, તમે લાઈન ૧૬૫ માં Supabase URL સેટ નથી કરી, જેથી ડેટાબેઝ કનેક્ટ નથી થયો. પહેલા કી એડ કરો!</td></tr>`; 
+                return; 
+            }
 
             const { data, error } = await supabase.from('bookings').select('*').order('date', { ascending: true });
 
