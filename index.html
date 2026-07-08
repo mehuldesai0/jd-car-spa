@@ -24,6 +24,18 @@
         nav a { margin-left: 20px; font-weight: 500; text-transform: uppercase; font-size: 14px; cursor: pointer; transition: color 0.3s; }
         nav a:hover { color: #e50914; }
 
+        /* FLOATING ADMIN BUTTON (ખાસ મોબાઈલ અને કમ્પ્યુટર બંને માટે) */
+        .floating-admin-btn {
+            position: fixed; bottom: 25px; right: 25px; 
+            background-color: #e50914; color: white; 
+            width: 55px; height: 55px; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 22px; cursor: pointer; z-index: 9999;
+            box-shadow: 0 4px 15px rgba(229, 9, 20, 0.4);
+            transition: transform 0.2s;
+        }
+        .floating-admin-btn:hover { transform: scale(1.1); background-color: #b20710; }
+
         /* Hero Section */
         .hero {
             height: 100vh; background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1607860108855-64acf2078ed9?auto=format&fit=crop&w=1920&q=80') no-repeat center center/cover;
@@ -101,6 +113,11 @@
 </head>
 <body>
 
+    <!-- TARTEERU LOCK BUTTON FOR OWNER -->
+    <div class="floating-admin-btn" onclick="openAdminPopup()" title="Owner Login">
+        <i class="fa-solid fa-user-lock"></i>
+    </div>
+
     <!-- Main Website Container (Hidden when Dashboard is active) -->
     <div id="main-website-layout">
         <header>
@@ -111,7 +128,6 @@
                 <a href="#booking">Book Slot</a>
                 <a href="#gallery">Our Work</a>
                 <a href="#contact">Contact</a>
-                <a onclick="openAdminPopup()" style="color:#e50914; font-weight:bold;"><i class="fa-solid fa-lock"></i> Admin</a>
             </nav>
         </header>
 
@@ -223,7 +239,7 @@
     </div>
 
     <script>
-        // ⚠️ તમારા SUPABASE ની DETAILS અહીં લાઈન ૧૬૫ અને ૧૬૬ માં નાખો:
+        // ⚠️ તમારા SUPABASE ની DETAILS અહીં લાઈન ૧૬૯ અને ૧૭૦ માં નાખો:
         const SUPABASE_URL = "તમારી_SUPABASE_URL_અહીં_નાખો";
         const SUPABASE_KEY = "તમારી_SUPABASE_ANON_KEY_અહીં_નાખો";
 
@@ -233,7 +249,7 @@
                 supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
             }
         } catch(e) {
-            console.log("Supabase initialization deferred until keys are provided.");
+            console.log("Supabase error handled.");
         }
 
         document.getElementById('bookingDate').setAttribute('min', new Date().toISOString().split('T')[0]);
@@ -247,7 +263,7 @@
         async function handleFormSubmit(event) {
             event.preventDefault();
             if(!supabase) { 
-                alert("તમે હજુ Supabase Keys કોડમાં એડ નથી કરી! કૃપા કરીને લાઈન ૧૬૫ અને ૧૬૬ ચેક કરો."); 
+                alert("Supabase Keys Not Found! Please configure Line 169 & 170."); 
                 return; 
             }
 
@@ -262,14 +278,14 @@
 
             const { data, error } = await supabase.from('bookings').insert([{ name, phone, car, service, date, slot }]);
 
-            if (error) { alert("Error saving data to database!"); } 
+            if (error) { alert("Error saving data!"); } 
             else {
                 document.getElementById('spaBookingForm').style.display = 'none';
                 document.getElementById('successMessage').style.display = 'block';
             }
         }
 
-        // Popup Open/Close Functions (ભૂલ વગર ચાલશે)
+        // Popup Open/Close
         function openAdminPopup() { 
             document.getElementById('adminModal').style.display = 'flex'; 
         }
@@ -287,7 +303,7 @@
                 document.getElementById('dashboardPage').style.display = 'block';
                 loadBookings();
             } else {
-                alert("ખોટો ID અથવા પાસવર્ડ! ફરીથી પ્રયાસ કરો.");
+                alert("ખોટો ID અથવા પાસવર્ડ!");
             }
         }
 
@@ -301,7 +317,7 @@
             tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">Fetching records...</td></tr>`;
             
             if(!supabase) { 
-                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#ff9800; padding:20px;">⚠️ એડમિન લૉગિન સક્સેસફુલ!<br><br>પરંતુ, તમે લાઈન ૧૬૫ માં Supabase URL સેટ નથી કરી, જેથી ડેટાબેઝ કનેક્ટ નથી થયો. પહેલા કી એડ કરો!</td></tr>`; 
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#ff9800; padding:20px;">⚠️ એડમિન લૉગિન સક્સેસફુલ!<br><br>પરંતુ, તમે લાઈન ૧૬૯ માં Supabase URL સેટ નથી કરી, જેથી ડેટાબેઝ કનેક્ટ નથી થયો. પહેલા કી એડ કરો!</td></tr>`; 
                 return; 
             }
 
