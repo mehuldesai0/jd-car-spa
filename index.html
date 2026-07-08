@@ -9,17 +9,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         /* Basic Reset & Premium Dark Theme */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        body {
-            background-color: #121212;
-            color: #ffffff;
-            line-height: 1.6;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: #121212; color: #ffffff; line-height: 1.6; }
         a { text-decoration: none; color: inherit; }
 
         /* Header & Navigation */
@@ -30,7 +21,7 @@
         }
         .logo { font-size: 26px; font-weight: 800; letter-spacing: 1px; }
         .logo span { color: #e50914; }
-        nav a { margin-left: 20px; font-weight: 500; text-transform: uppercase; font-size: 14px; letter-spacing: 1px; transition: color 0.3s; }
+        nav a { margin-left: 20px; font-weight: 500; text-transform: uppercase; font-size: 14px; cursor: pointer; transition: color 0.3s; }
         nav a:hover { color: #e50914; }
 
         /* Hero Section */
@@ -54,18 +45,16 @@
 
         /* Services Grid */
         .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin-top: 20px; }
-        .service-card { background-color: #1a1a1a; padding: 45px 25px; border-radius: 8px; border: 1px solid #2a2a2a; transition: transform 0.3s; }
-        .service-card:hover { transform: translateY(-10px); border-color: #e50914; }
+        .service-card { background-color: #1a1a1a; padding: 45px 25px; border-radius: 8px; border: 1px solid #2a2a2a; }
         .service-card i { font-size: 42px; color: #e50914; margin-bottom: 22px; }
         .service-card h3 { font-size: 22px; margin-bottom: 15px; text-transform: uppercase; }
         .service-card p { color: #aaa; font-size: 15px; }
 
         /* Booking Form Styles */
-        .booking-container, .admin-container { max-width: 700px; margin: 0 auto; background-color: #1a1a1a; padding: 40px; border-radius: 8px; border: 1px solid #2a2a2a; text-align: left; }
+        .booking-container { max-width: 700px; margin: 0 auto; background-color: #1a1a1a; padding: 40px; border-radius: 8px; border: 1px solid #2a2a2a; text-align: left; }
         .form-group { margin-bottom: 20px; }
         .form-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px; text-transform: uppercase; color: #ccc; }
         .form-control { width: 100%; padding: 12px; background-color: #2a2a2a; border: 1px solid #3a3a3a; color: white; border-radius: 4px; font-size: 16px; }
-        .form-control:focus { outline: none; border-color: #e50914; }
         
         .slots-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin-top: 10px; }
         .slot-option { background-color: #2a2a2a; border: 1px solid #3a3a3a; padding: 12px; text-align: center; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 14px; }
@@ -73,11 +62,20 @@
 
         .success-box { display: none; background-color: #1b5e20; color: white; padding: 20px; border-radius: 6px; text-align: center; font-weight: bold; border: 1px solid #4caf50; }
 
-        /* Admin Dashboard Table */
-        .admin-section { display: none; background-color: #111; padding: 60px 5%; }
-        .booking-table { width: 100%; border-collapse: collapse; margin-top: 20px; background-color: #1a1a1a; color: white; }
-        .booking-table th, .booking-table td { padding: 12px; text-align: left; border-bottom: 1px solid #3a3a3a; }
-        .booking-table th { background-color: #e50914; text-transform: uppercase; font-size: 14px; }
+        /* POPUP MODAL BACKGROUND FOR ADMIN LOGIN */
+        .modal-bg {
+            display: none; position: fixed; top:0; left:0; width:100%; height:100%;
+            background: rgba(0,0,0,0.85); z-index: 2000; justify-content:center; align-items:center;
+        }
+        .admin-popup { background-color: #1a1a1a; padding: 40px; border-radius: 8px; border: 2px solid #e50914; width: 100%; max-width: 450px; position: relative; }
+        .close-popup { position: absolute; top:15px; right:20px; font-size:24px; cursor:pointer; color:#aaa; }
+        .close-popup:hover { color:white; }
+
+        /* Admin Dashboard Table (Full Page View) */
+        .dashboard-view { display: none; padding: 100px 5% 50px; background-color: #0b0b0b; min-height: 100vh; text-align: center; }
+        .booking-table { width: 100%; border-collapse: collapse; margin-top: 30px; background-color: #1a1a1a; color: white; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        .booking-table th, .booking-table td { padding: 14px; text-align: left; border-bottom: 1px solid #3a3a3a; }
+        .booking-table th { background-color: #e50914; text-transform: uppercase; font-size: 14px; letter-spacing: 1px; }
         .booking-table tr:hover { background-color: #222; }
 
         /* Gallery Section */
@@ -103,142 +101,137 @@
 </head>
 <body>
 
-    <!-- Header Navigation -->
-    <header>
-        <div class="logo"><span>JD</span> CAR SPA</div>
-        <nav>
-            <a href="#home">Home</a>
-            <a href="#services">Services</a>
-            <a href="#booking">Book Slot</a>
-            <a href="#gallery">Our Work</a>
-            <a href="#contact">Contact</a>
-            <a href="#admin-login-anchor" onclick="showAdminLogin()">Admin Panel</a>
-        </nav>
-    </header>
+    <!-- Main Website Container (Hidden when Dashboard is active) -->
+    <div id="main-website-layout">
+        <header>
+            <div class="logo"><span>JD</span> CAR SPA</div>
+            <nav>
+                <a href="#home">Home</a>
+                <a href="#services">Services</a>
+                <a href="#booking">Book Slot</a>
+                <a href="#gallery">Our Work</a>
+                <a href="#contact">Contact</a>
+                <a onclick="openAdminPopup()" style="color:#e50914; font-weight:bold;"><i class="fa-solid fa-lock"></i> Admin</a>
+            </nav>
+        </header>
 
-    <!-- Hero Section -->
-    <section id="home" class="hero">
-        <h1>Give Your Car A Showroom Shine</h1>
-        <p>JD CAR SPA — Professional detailing, ultra-gloss coatings, and deep cleaning now in Dharampur.</p>
-        <a href="#booking" class="btn"><i class="fa-solid fa-calendar-check"></i> Book Online Slot Now</a>
-    </section>
+        <!-- Hero Section -->
+        <section id="home" class="hero">
+            <h1>Give Your Car A Showroom Shine</h1>
+            <p>JD CAR SPA — Professional detailing, ultra-gloss coatings, and deep cleaning now in Dharampur.</p>
+            <a href="#booking" class="btn"><i class="fa-solid fa-calendar-check"></i> Book Online Slot Now</a>
+        </section>
 
-    <!-- Services Section -->
-    <section id="services">
-        <h2>Our Services</h2>
-        <div class="services-grid">
-            <div class="service-card">
-                <i class="fa-solid fa-wand-magic-sparkles"></i>
-                <h3>Ceramic Coating</h3>
-                <p>Premium 9H ultra-gloss paint protection shield against scratches and UV rays.</p>
+        <!-- Services Section -->
+        <section id="services">
+            <h2>Our Services</h2>
+            <div class="services-grid">
+                <div class="service-card"><i class="fa-solid fa-wand-magic-sparkles"></i><h3>Ceramic Coating</h3><p>Premium 9H ultra-gloss paint protection shield against scratches and UV rays.</p></div>
+                <div class="service-card"><i class="fa-solid fa-car-clean"></i><h3>Interior Detailing</h3><p>Complete deep vacuuming, steam sanitization, and conditioning for interior.</p></div>
+                <div class="service-card"><i class="fa-solid fa-shield-halved"></i><h3>Paint Protection Film (PPF)</h3><p>High-grade self-healing clear film installation to preserve your vehicle's factory paint.</p></div>
             </div>
-            <div class="service-card">
-                <i class="fa-solid fa-car-clean"></i>
-                <h3>Interior Detailing</h3>
-                <p>Complete deep vacuuming, steam sanitization, and conditioning for interior.</p>
-            </div>
-            <div class="service-card">
-                <i class="fa-solid fa-shield-halved"></i>
-                <h3>Paint Protection Film (PPF)</h3>
-                <p>High-grade self-healing clear film installation to preserve your vehicle's factory paint.</p>
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Live Booking Section -->
-    <section id="booking" style="background-color: #0b0b0b;">
-        <h2>Book Your Appointment</h2>
-        <div class="booking-container">
-            <form id="spaBookingForm" onsubmit="handleFormSubmit(event)">
-                <div class="form-group"><label>Full Name</label><input type="text" id="custName" class="form-control" required placeholder="Enter your name"></div>
-                <div class="form-group"><label>Phone Number</label><input type="tel" id="custPhone" class="form-control" required placeholder="Enter mobile number"></div>
-                <div class="form-group"><label>Car Brand & Model</label><input type="text" id="carModel" class="form-control" required placeholder="e.g. Swift, Fortuner, i20"></div>
-                <div class="form-group">
-                    <label>Select Service</label>
-                    <select id="selectedService" class="form-control" required>
-                        <option value="">-- Choose a Service --</option>
-                        <option value="Ceramic Coating">Ceramic Coating</option>
-                        <option value="Deep Interior Detailing">Deep Interior Detailing</option>
-                        <option value="Paint Protection Film (PPF)">Paint Protection Film (PPF)</option>
-                        <option value="Full Body Spa & Wash">Full Body Spa & Wash</option>
-                    </select>
-                </div>
-                <div class="form-group"><label>Select Date</label><input type="date" id="bookingDate" class="form-control" required></div>
-                <div class="form-group">
-                    <label>Select Available Time Slot</label>
-                    <div class="slots-grid">
-                        <div class="slot-option" onclick="selectSlot(this)">09:00 AM</div>
-                        <div class="slot-option" onclick="selectSlot(this)">11:00 AM</div>
-                        <div class="slot-option" onclick="selectSlot(this)">01:00 PM</div>
-                        <div class="slot-option" onclick="selectSlot(this)">03:00 PM</div>
-                        <div class="slot-option" onclick="selectSlot(this)">04:30 PM</div>
+        <!-- Live Booking Section -->
+        <section id="booking" style="background-color: #0b0b0b;">
+            <h2>Book Your Appointment</h2>
+            <div class="booking-container">
+                <form id="spaBookingForm" onsubmit="handleFormSubmit(event)">
+                    <div class="form-group"><label>Full Name</label><input type="text" id="custName" class="form-control" required placeholder="Enter your name"></div>
+                    <div class="form-group"><label>Phone Number</label><input type="tel" id="custPhone" class="form-control" required placeholder="Enter mobile number"></div>
+                    <div class="form-group"><label>Car Brand & Model</label><input type="text" id="carModel" class="form-control" required placeholder="e.g. Swift, Fortuner, i20"></div>
+                    <div class="form-group">
+                        <label>Select Service</label>
+                        <select id="selectedService" class="form-control" required>
+                            <option value="">-- Choose a Service --</option>
+                            <option value="Ceramic Coating">Ceramic Coating</option>
+                            <option value="Deep Interior Detailing">Deep Interior Detailing</option>
+                            <option value="Paint Protection Film (PPF)">Paint Protection Film (PPF)</option>
+                            <option value="Full Body Spa & Wash">Full Body Spa & Wash</option>
+                        </select>
                     </div>
-                </div>
-                <input type="hidden" id="selectedSlotValue" required>
-                <button type="submit" class="btn" style="width: 100%; justify-content: center; margin-top: 15px;">Confirm My Booking</button>
-            </form>
-            <div class="success-box" id="successMessage"><i class="fa-solid fa-circle-check"></i><br><br>Booking Successful! Your slot has been reserved in our system.</div>
-        </div>
-    </section>
+                    <div class="form-group"><label>Select Date</label><input type="date" id="bookingDate" class="form-control" required></div>
+                    <div class="form-group">
+                        <label>Select Available Time Slot</label>
+                        <div class="slots-grid">
+                            <div class="slot-option" onclick="selectSlot(this)">09:00 AM</div>
+                            <div class="slot-option" onclick="selectSlot(this)">11:00 AM</div>
+                            <div class="slot-option" onclick="selectSlot(this)">01:00 PM</div>
+                            <div class="slot-option" onclick="selectSlot(this)">03:00 PM</div>
+                            <div class="slot-option" onclick="selectSlot(this)">04:30 PM</div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="selectedSlotValue" required>
+                    <button type="submit" class="btn" style="width: 100%; justify-content: center; margin-top: 15px;">Confirm My Booking</button>
+                </form>
+                <div class="success-box" id="successMessage"><i class="fa-solid fa-circle-check"></i><br><br>Booking Successful! Your slot has been reserved in our system.</div>
+            </div>
+        </section>
 
-    <!-- SIKRET OWNER ADMIN PANEL LOGIN -->
-    <span id="admin-login-anchor"></span>
-    <section id="admin-login-section" style="display:none; background-color: #161616; border-top: 1px solid #222;">
-        <h2>Owner Admin Login</h2>
-        <div class="admin-container">
-            <div class="form-group"><label>Admin ID</label><input type="text" id="adminId" class="form-control" placeholder="Enter admin ID"></div>
+        <!-- Gallery Section -->
+        <section id="gallery">
+            <h2>Our Best Work</h2>
+            <div class="gallery-grid">
+                <div class="gallery-item"><img src="https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=600&q=80" alt="Clean"><div class="gallery-label">Deep Interior Clean</div></div>
+                <div class="gallery-item"><img src="https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=600&q=80" alt="Gloss"><div class="gallery-label">Ceramic Gloss Finish</div></div>
+                <div class="gallery-item"><img src="https://images.unsplash.com/photo-1520340356584-f9917d1eea6f?auto=format&fit=crop&w=600&q=80" alt="Paint"><div class="gallery-label">Paint Correction</div></div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" style="background-color: #1a1a1a;">
+            <h2>Contact Us</h2>
+            <div class="contact-info">
+                <div class="info-item"><i class="fa-solid fa-location-dot"></i><span>Near Sarvottam Fastfood, Dharampur, Gujarat - 396050</span></div>
+                <div class="info-item"><i class="fa-solid fa-phone"></i><span>+91 95747 23722</span></div>
+                <div class="info-item"><i class="fa-solid fa-envelope"></i><span>jdcarspa27@gmail.com</span></div>
+                <div class="info-item"><i class="fa-solid fa-clock"></i><span>09:00 AM - 06:00 PM (Mon to Sat)</span></div>
+            </div>
+        </section>
+
+        <footer><p>&copy; 2026 JD CAR SPA. All Rights Reserved. Built with ❤️</p></footer>
+    </div>
+
+    <!-- POPUP MODAL LOGIN WINDOW -->
+    <div id="adminModal" class="modal-bg">
+        <div class="admin-popup">
+            <span class="close-popup" onclick="closeAdminPopup()">&times;</span>
+            <h2 style="font-size:24px; margin-bottom:20px; text-align:center; color:#e50914;">OWNER LOGIN</h2>
+            <div class="form-group"><label>Admin ID</label><input type="text" id="adminId" class="form-control" placeholder="Enter ID"></div>
             <div class="form-group"><label>Password</label><input type="password" id="adminPass" class="form-control" placeholder="Enter password"></div>
-            <button onclick="checkAdminLogin()" class="btn" style="width:100%; justify-content:center;">Login to Dashboard</button>
+            <button onclick="checkAdminLogin()" class="btn" style="width:100%; justify-content:center; margin-top:10px;">Login</button>
         </div>
-    </section>
+    </div>
 
-    <!-- LIVE DASHBOARD TABLE -->
-    <section id="adminDashboard" class="admin-section">
-        <h2>Live Booking Dashboard</h2>
-        <button onclick="loadBookings()" class="btn" style="margin-bottom:20px;"><i class="fa-solid fa-rotate"></i> Refresh Data</button>
+    <!-- FULL PAGE LIVE DASHBOARD TABLE -->
+    <div id="dashboardPage" class="dashboard-view">
+        <h2>JD CAR SPA - LIVE BOOKINGS</h2>
+        <div style="margin: 20px 0; display:flex; justify-content:center; gap:15px;">
+            <button onclick="loadBookings()" class="btn" style="background:#222; border:1px solid #3a3a3a;"><i class="fa-solid fa-rotate"></i> Refresh Data</button>
+            <button onclick="logoutAdmin()" class="btn" style="background:#555;"><i class="fa-solid fa-right-from-bracket"></i> Close Dashboard</button>
+        </div>
         <table class="booking-table">
             <thead>
                 <tr>
-                    <th>Date</th><th>Time Slot</th><th>Customer Name</th><th>Phone</th><th>Car Model</th><th>Service Required</th>
+                    <th>Date</th><th>Time Slot</th><th>Customer Name</th><th>Phone</th><th>Car Model</th><th>Service</th>
                 </tr>
             </thead>
             <tbody id="bookingsTableBody">
-                <tr><td colspan="6" style="text-align:center;">Loading live appointments...</td></tr>
+                <tr><td colspan="6" style="text-align:center;">Loading records...</td></tr>
             </tbody>
         </table>
-    </section>
-
-    <!-- Gallery Section -->
-    <section id="gallery">
-        <h2>Our Best Work</h2>
-        <div class="gallery-grid">
-            <div class="gallery-item"><img src="https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=600&q=80" alt="Clean"><div class="gallery-label">Deep Interior Clean</div></div>
-            <div class="gallery-item"><img src="https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=600&q=80" alt="Gloss"><div class="gallery-label">Ceramic Gloss Finish</div></div>
-            <div class="gallery-item"><img src="https://images.unsplash.com/photo-1520340356584-f9917d1eea6f?auto=format&fit=crop&w=600&q=80" alt="Paint"><div class="gallery-label">Paint Correction</div></div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" style="background-color: #1a1a1a;">
-        <h2>Contact Us</h2>
-        <div class="contact-info">
-            <div class="info-item"><i class="fa-solid fa-location-dot"></i><span>Near Sarvottam Fastfood, Dharampur, Gujarat - 396050</span></div>
-            <div class="info-item"><i class="fa-solid fa-phone"></i><span>+91 95747 23722</span></div>
-            <div class="info-item"><i class="fa-solid fa-envelope"></i><span>jdcarspa27@gmail.com</span></div>
-            <div class="info-item"><i class="fa-solid fa-clock"></i><span>09:00 AM - 06:00 PM (Mon to Sat)</span></div>
-        </div>
-    </section>
-
-    <footer><p>&copy; 2026 JD CAR SPA. All Rights Reserved. Built with ❤️</p></footer>
+    </div>
 
     <script>
-        // ⚠️ અહીં તમારા SUPABASE ની DETAILS લાઈન નંબર ૨૦૪ અને ૨૦૫ માં સેટ કરો:
+        // ⚠️ તમારા SUPABASE ની DETAILS અહીં લાઈન ૧૬૧ અને ૧૬૨ માં ખાસ પેસ્ટ કરી દેજો:
         const SUPABASE_URL = "તમારી_SUPABASE_URL_અહીં_નાખો";
         const SUPABASE_KEY = "તમારી_SUPABASE_ANON_KEY_અહીં_નાખો";
 
-        const supabase =  window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        let supabase = null;
+        if(SUPABASE_URL !== "તમારી_SUPABASE_URL_અહીં_નાખો") {
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        }
 
-        // Form Date Setup
         document.getElementById('bookingDate').setAttribute('min', new Date().toISOString().split('T')[0]);
 
         function selectSlot(element) {
@@ -247,9 +240,10 @@
             document.getElementById('selectedSlotValue').value = element.innerText;
         }
 
-        // કસ્ટમર ડેટા સબમિટ થઈને સીધો SUPABASE માં જશે
         async function handleFormSubmit(event) {
             event.preventDefault();
+            if(!supabase) { alert("Please configure your Supabase Keys first!"); return; }
+
             const name = document.getElementById('custName').value;
             const phone = document.getElementById('custPhone').value;
             const car = document.getElementById('carModel').value;
@@ -259,49 +253,48 @@
 
             if (!slot) { alert("Please select a time slot!"); return; }
 
-            // Supabase Database Insert
             const { data, error } = await supabase.from('bookings').insert([{ name, phone, car, service, date, slot }]);
 
-            if (error) {
-                alert("Something went wrong! Please try again.");
-                console.error(error);
-            } else {
+            if (error) { alert("Error saving data!"); } 
+            else {
                 document.getElementById('spaBookingForm').style.display = 'none';
                 document.getElementById('successMessage').style.display = 'block';
             }
         }
 
-        // એડમિન લોગિન સિસ્ટમ
-        function showAdminLogin() {
-            document.getElementById('admin-login-section').style.display = 'block';
-            window.location.hash = "admin-login-section";
-        }
+        // Popup Functions
+        function openAdminPopup() { document.getElementById('adminModal').style.display = 'flex'; }
+        function closeAdminPopup() { document.getElementById('adminModal').style.display = 'none'; }
 
         function checkAdminLogin() {
             const id = document.getElementById('adminId').value;
             const pass = document.getElementById('adminPass').value;
 
             if(id === "admin" && pass === "jdcarspa2026") {
-                document.getElementById('admin-login-section').style.display = 'none';
-                document.getElementById('adminDashboard').style.display = 'block';
+                closeAdminPopup();
+                document.getElementById('main-website-layout').style.display = 'none';
+                document.getElementById('dashboardPage').style.display = 'block';
                 loadBookings();
             } else {
-                alert("Wrong ID or Password! Access Denied.");
+                alert("Invalid ID or Password!");
             }
         }
 
-        // ડેટાબેઝમાંથી લાઈવ ડેટા ખેંચીને ટેબલમાં લાવવા માટે
+        function logoutAdmin() {
+            document.getElementById('dashboardPage').style.display = 'none';
+            document.getElementById('main-website-layout').style.display = 'block';
+        }
+
         async function loadBookings() {
             const tbody = document.getElementById('bookingsTableBody');
             tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">Fetching records...</td></tr>`;
+            if(!supabase) { tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:red;">Supabase Keys Not Found!</td></tr>`; return; }
 
             const { data, error } = await supabase.from('bookings').select('*').order('date', { ascending: true });
 
-            if (error) {
-                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:red;">Error loading data!</td></tr>`;
-            } else if (data.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">No appointments booked yet.</td></tr>`;
-            } else {
+            if (error) { tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:red;">Error loading data!</td></tr>`; } 
+            else if (data.length === 0) { tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">No data available.</td></tr>`; } 
+            else {
                 tbody.innerHTML = "";
                 data.forEach(b => {
                     tbody.innerHTML += `
@@ -312,8 +305,7 @@
                             <td><a href="tel:${b.phone}" style="color:#4caf50;"><i class="fa-solid fa-phone"></i> ${b.phone}</a></td>
                             <td>🚗 ${b.car}</td>
                             <td><em>${b.service}</em></td>
-                        </tr>
-                    `;
+                        </tr>`;
                 });
             }
         }
